@@ -139,4 +139,14 @@ extern uint16_t random16l(uint16_t lim);
 */
 extern uint16_t random16nl(uint16_t min, uint16_t lim);
 
+/*
+* To determine if a number is a power of two
+*/
+extern uint8_t is_power_of_2(uint64_t n);
+
+/*
+*Calculating the number of 1s in the binary representation of an unsigned long integer, Using the Brian Kernighan algorithm
+*/
+extern uint32_t count_ones(uint64_t n);
+
 #endif  //_EMBEDDED_LIB_

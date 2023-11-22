@@ -49,3 +49,16 @@ uint16_t random16nl(uint16_t min, uint16_t lim) {
   uint16_t r = random16(delta) + min;
   return r;
 }
+
+uint8_t is_power_of_2(uint64_t n) {
+  return (n != 0 && ((n & (n - 1)) == 0));
+}
+
+uint32_t count_ones(uint64_t n) {
+  uint32_t count = 0;
+  while (n >0 ) {
+      count ++;
+      n &= (n-1);
+  }
+  return count;
+}
