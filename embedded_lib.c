@@ -5,6 +5,8 @@
 #define FASTLED_RAND16_13849 ((uint16_t)(13849))
 uint16_t rand16seed = 1337;
 
+uint64_t a_ = 0, b_ = 0;
+  
 void hex2str(uint8_t *in, uint16_t len, uint8_t *out) {
   static const char hex[] = "0123456789abcdef";
   uint16_t i, j;
@@ -61,4 +63,42 @@ uint32_t count_ones(uint64_t n) {
       n &= (n-1);
   }
   return count;
+}
+
+
+uint32_t rand32() {
+  // The generator usually returns an uint64_t, truncate it.
+  //
+  // It is noted in this paper (https://arxiv.org/abs/1810.05313) that the
+  // lowest 32 bits fail some statistical tests from the Big Crush
+  // suite. Use the higher ones instead.
+  return rand64() >> 32;
+}
+
+double rand_double() {
+  uint64_t x = rand64();
+  // From https://vigna.di.unimi.it/xorshift/.
+  // 53 bits of mantissa, hence the "hexadecimal exponent" 1p-53.
+  return (x >> 11) * 0x1.0p-53;
+}
+
+
+void insecure_random_generator() {
+  a_ = rand64();
+  b_ = rand64();
+}
+
+uint64_t rand64() {
+  // Using XorShift128+, which is simple and widely used. See
+  // https://en.wikipedia.org/wiki/Xorshift#xorshift+ for details.
+  uint64_t t = a_;
+  const uint64_t s = b_;
+
+  a_ = s;
+  t ^= t << 23;
+  t ^= t >> 17;
+  t ^= s ^ (s >> 26);
+  b_ = t;
+
+  return t + s;
 }
